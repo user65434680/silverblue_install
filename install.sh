@@ -1,13 +1,23 @@
 #!/bin/bash
+echo "Updating the system..."
+sudo rpm-ostree update
+echo "Installing packages..."
+sudo rpm-ostree install \
+  unbound \
+  openssh-server \
+  inotify-tools \
+  iptables \
+  ipset \
+  jq \
+  bind-utils \
+  net-tools \
+  audit \
+  libpcap-devel \
+  libusb1-devel \
+  libnetfilter_queue-devel \
+  ruby \
+  bettercap
 
-sudo rpm-ostree update -y
-
-sudo rpm-ostree install unbound openssh-server inotify-tools iptables ipset jq dnsutils net-tools auditd build-essential libpcap-dev libusb1-devel libnetfilter-queue-devel ruby bettercap
-
-sudo systemctl enable --now unbound
-sudo systemctl enable --now sshd
-sudo systemctl enable --now auditd
-
-sudo systemctl enable --now netfilter-persistent
-
-reboot
+echo "Rebooting is required to apply changes. The system will reboot now..."
+sleep 5
+sudo reboot
