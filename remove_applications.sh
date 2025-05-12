@@ -18,12 +18,7 @@ else
         org.gnome.Logs
         org.gnome.Maps
         org.gnome.Snapshot
-        org.gnome.TextEditor
         org.gnome.Weather
-        org.gnome.DiskUsageAnalyzer
-        org.gnome.Clocks
-        org.gnome.Fonts
-        org.gnome.Sushi
         org.fedoraproject.MediaWriter
     )
 

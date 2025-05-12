@@ -8,7 +8,6 @@ sudo rpm-ostree install \
   net-tools \
   libpcap-devel \
   libusb1-devel \
-  ruby \
-  bettercap
+  ruby
 
 sleep 5

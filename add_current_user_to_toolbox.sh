@@ -1,13 +1,26 @@
 #!/bin/bash
-echo "Creating 'toolbox-users' group if not already present..."
-sudo groupadd toolbox-users
+if ! grep -q "toolbox-users" /etc/group; then
+    echo "Creating 'toolbox-users' group..."
+    sudo groupadd toolbox-users
+else
+    echo "'toolbox-users' group already exists."
+fi
+
 current_user=$(whoami)
 echo "Adding the current user ($current_user) to 'toolbox-users' group..."
-sudo usermod -aG toolbox-users $current_user
-echo "Changing group ownership of /usr/bin/toolbox to 'toolbox-users'..."
-sudo chgrp toolbox-users /usr/bin/toolbox
-echo "Setting permissions to allow only 'toolbox-users' group to run Toolbox..."
-sudo chmod 750 /usr/bin/toolbox
+if ! id -nG "$current_user" | grep -qw "toolbox-users"; then
+    sudo usermod -aG toolbox-users $current_user
+else
+    echo "$current_user is already in the 'toolbox-users' group."
+fi
+tools=("/usr/bin/toolbox" "/usr/bin/flatpak" "/usr/bin/podman" "/usr/bin/rpm-ostree")
+for tool in "${tools[@]}"; do
+    if [ -f "$tool" ]; then
+        echo "Changing group ownership and setting permissions for $tool..."
+        sudo chgrp toolbox-users "$tool"
+        sudo chmod 750 "$tool"
+    fi
+done
 echo "Verifying permissions for /usr/bin/toolbox..."
 ls -l /usr/bin/toolbox
 echo "This script will now delete itself..."
