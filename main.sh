@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 check_file() {
     if [ ! -f "$1" ]; then
         echo "Error: Required file $1 not found"

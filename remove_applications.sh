@@ -2,8 +2,6 @@
 # This script removes unnecessary software from a Fedora Silverblue system.
 # It specifically targets Flatpak applications and GNOME Software.
 
-set -e
-
 if ! command -v flatpak &> /dev/null; then
     echo "Flatpak is not installed. Skipping Flatpak-related tasks."
 else
