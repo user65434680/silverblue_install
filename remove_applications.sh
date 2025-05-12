@@ -1,45 +1,53 @@
 #!/bin/bash
-apps=(
-    org.gnome.Calculator
-    org.gnome.Calendar
-    org.gnome.Characters
-    org.gnome.Connections
-    org.gnome.Contacts
-    org.gnome.Evince
-    org.gnome.Extensions
-    org.gnome.Logs
-    org.gnome.Maps
-    org.gnome.Snapshot
-    org.gnome.TextEditor
-    org.gnome.Weather
-    org.gnome.DiskUsageAnalyzer
-    org.gnome.Clocks
-    org.gnome.Fonts
-    org.gnome.Sushi
-    org.fedoraproject.MediaWriter
-)
+# This script removes unnecessary software from a Fedora Silverblue system.
+# It specifically targets Flatpak applications and GNOME Software.
 
-remove_flatpaks() {
-    echo "Removing selected Flatpak apps..."
-    for app in "${apps[@]}"; do
-        echo "Uninstalling $app..."
-        flatpak uninstall -y "$app"
-    done
-    echo "Cleaning up unused Flatpak runtimes..."
-    flatpak uninstall --unused -y
-}
+set -e
 
-remove_gnome_software() {
-    echo "Removing GNOME Software..."
-    sudo rpm-ostree override remove gnome-software gnome-software-rpm-ostree
-}
-remove_toolbox() {
-    echo "Removing Toolbox..."
-    sudo rpm-ostree override remove toolbox
-}
-remove_flatpaks
-remove_gnome_software
-remove_toolbox
+if ! command -v flatpak &> /dev/null; then
+    echo "Flatpak is not installed. Skipping Flatpak-related tasks."
+else
+    apps=(
+        org.gnome.Calculator
+        org.gnome.Calendar
+        org.gnome.Characters
+        org.gnome.Connections
+        org.gnome.Contacts
+        org.gnome.Evince
+        org.gnome.Extensions
+        org.gnome.Logs
+        org.gnome.Maps
+        org.gnome.Snapshot
+        org.gnome.TextEditor
+        org.gnome.Weather
+        org.gnome.DiskUsageAnalyzer
+        org.gnome.Clocks
+        org.gnome.Fonts
+        org.gnome.Sushi
+        org.fedoraproject.MediaWriter
+    )
 
-echo "Rebooting system to apply changes..."
-systemctl reboot
+    remove_flatpaks() {
+        echo "Removing selected Flatpak apps..."
+        for app in "${apps[@]}"; do
+            echo "Uninstalling $app..."
+            flatpak uninstall -y "$app"
+        done
+        echo "Cleaning up unused Flatpak runtimes..."
+        flatpak uninstall --unused -y
+    }
+
+    remove_flatpaks
+fi
+
+if ! command -v rpm-ostree &> /dev/null; then
+    echo "rpm-ostree is not installed or available. Skipping GNOME Software removal."
+else
+    remove_gnome_software() {
+        echo "Removing GNOME Software..."
+        sudo rpm-ostree override remove gnome-software gnome-software-rpm-ostree
+    }
+
+    remove_gnome_software
+fi
+
