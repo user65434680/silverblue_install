@@ -1,12 +1,5 @@
 #!/bin/bash
 
-check_file() {
-    if [ ! -f "$1" ]; then
-        echo "Error: Required file $1 not found"
-        exit 1
-    fi
-}
-
 echo "Starting Fedora Silverblue setup..."
 
 echo "Step 1: Making scripts executable..."

@@ -2,6 +2,19 @@
 # This script removes unnecessary software from a Fedora Silverblue system.
 # It specifically targets Flatpak applications and GNOME Software.
 
+
+check_rpm_ostree() {
+    if rpm-ostree status | grep -q "Transaction"; then
+        echo "RPM-OSTree is busy with another operation. Attempting to cancel..."
+        sudo rpm-ostree cancel
+        sleep 5
+        if rpm-ostree status | grep -q "Transaction"; then
+            echo "ERROR: Could not cancel existing transaction. Please reboot and try again."
+            exit 1
+        fi
+    fi
+}
+
 if ! command -v flatpak &> /dev/null; then
     echo "Flatpak is not installed. Skipping Flatpak-related tasks."
 else
