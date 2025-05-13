@@ -52,7 +52,8 @@ remove_gnome_software() {
     if rpm -q gnome-software gnome-software-rpm-ostree &> /dev/null; then
         echo "Found GNOME Software packages, removing..."
         
-        sudo rpm-ostree override remove --install \
+        sudo rpm-ostree override remove \
+            --allow-inactive \
             gnome-software \
             gnome-software-rpm-ostree || {
             echo "Failed to remove GNOME Software, attempting cleanup..."
