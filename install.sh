@@ -10,4 +10,6 @@ sudo rpm-ostree install \
   libusb1-devel \
   ruby
 
+sudo systemctl enable unbound sshd
+
 sleep 5

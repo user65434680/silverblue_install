@@ -14,7 +14,7 @@ check_file "add_current_user_to_toolbox.sh"
 echo "Starting Fedora Silverblue setup..."
 
 echo "Step 1: Making scripts executable..."
-chmod +x remove_applications.sh install.sh add_current_user_to_toolbox.sh
+chmod +x *.sh
 
 echo "Step 2: Removing unnecessary applications..."
 sudo bash remove_applications.sh
@@ -27,6 +27,21 @@ sudo bash install.sh
 
 echo "Step 5: Configuring toolbox permissions..."
 sudo bash add_current_user_to_toolbox.sh
+
+echo "Step 6: Create students group"
+sudo bash create_student_group.sh
+
+echo "Step 7: add to sudoers"
+sudo bash add_to_sudoers.sh
+
+echo "Step 8: scan network"
+sudo bash echo_ip_range.sh
+
+echo "Step 9: Apply network config"
+sudo bash network.sh
+
+echo "Step 10: Setting up IP blocking"
+sudo bash IP_tables_install.sh
 
 echo "All steps completed. System will reboot in 10 seconds..."
 sleep 10
