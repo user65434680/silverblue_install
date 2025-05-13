@@ -32,8 +32,10 @@ for package in unbound inotify-tools net-tools libpcap-devel libusb1-devel ruby;
     }
 done
 
+
+sleep 10
+
 sudo systemctl enable unbound sshd
 
 echo "Installation complete. A reboot is required."
 sleep 5
-
