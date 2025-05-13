@@ -1,7 +1,5 @@
 #!/bin/bash
-# This script removes unnecessary software from a Fedora Silverblue system.
-# It specifically targets Flatpak applications and GNOME Software.
-
+set -e
 
 check_rpm_ostree() {
     if rpm-ostree status | grep -q "Transaction"; then
@@ -15,10 +13,8 @@ check_rpm_ostree() {
     fi
 }
 
-if ! command -v flatpak &> /dev/null; then
-    echo "Flatpak is not installed. Skipping Flatpak-related tasks."
-else
-    apps=(
+remove_flatpaks() {
+    local apps=(
         org.gnome.Calculator
         org.gnome.Calendar
         org.gnome.Characters
@@ -33,27 +29,44 @@ else
         org.fedoraproject.MediaWriter
     )
 
-    remove_flatpaks() {
-        echo "Removing selected Flatpak apps..."
-        for app in "${apps[@]}"; do
+    echo "Removing selected Flatpak apps..."
+    for app in "${apps[@]}"; do
+        if flatpak list --app | grep -q "$app"; then
             echo "Uninstalling $app..."
-            flatpak uninstall -y "$app"
-        done
-        echo "Cleaning up unused Flatpak runtimes..."
-        flatpak uninstall --unused -y
-    }
+            flatpak uninstall -y "$app" || {
+                echo "Failed to uninstall $app, continuing..."
+            }
+        else
+            echo "$app not installed, skipping..."
+        fi
+    done
 
+    echo "Cleaning up unused Flatpak runtimes..."
+    flatpak uninstall --unused -y || true
+}
+
+remove_gnome_software() {
+    echo "Removing GNOME Software..."
+    check_rpm_ostree
+    sudo rpm-ostree override remove gnome-software gnome-software-rpm-ostree || {
+        echo "Failed to remove GNOME Software, attempting cleanup..."
+        sudo rpm-ostree cleanup -m
+        exit 1
+    }
+}
+
+echo "Starting application removal process..."
+
+if command -v flatpak &> /dev/null; then
     remove_flatpaks
-fi
-
-if ! command -v rpm-ostree &> /dev/null; then
-    echo "rpm-ostree is not installed or available. Skipping GNOME Software removal."
 else
-    remove_gnome_software() {
-        echo "Removing GNOME Software..."
-        sudo rpm-ostree override remove gnome-software gnome-software-rpm-ostree
-    }
-
-    remove_gnome_software
+    echo "Flatpak is not installed. Skipping Flatpak-related tasks."
 fi
 
+if command -v rpm-ostree &> /dev/null; then
+    remove_gnome_software
+else
+    echo "rpm-ostree is not installed or available. Skipping GNOME Software removal."
+fi
+
+echo "Application removal process complete."
