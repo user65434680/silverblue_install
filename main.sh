@@ -7,10 +7,6 @@ check_file() {
     fi
 }
 
-check_file "remove_applications.sh"
-check_file "install.sh"
-check_file "add_current_user_to_toolbox.sh"
-
 echo "Starting Fedora Silverblue setup..."
 
 echo "Step 1: Making scripts executable..."
