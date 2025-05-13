@@ -48,26 +48,23 @@ remove_flatpaks() {
 remove_gnome_software() {
     echo "Removing GNOME Software..."
     check_rpm_ostree
-    
-    if rpm -q gnome-software gnome-software-rpm-ostree &> /dev/null; then
+
+    if rpm -q gnome-software &>/dev/null || rpm -q gnome-software-rpm-ostree &>/dev/null; then
         echo "Found GNOME Software packages, removing..."
-        
-        sudo rpm-ostree override remove \
-            --allow-inactive \
-            gnome-software \
-            gnome-software-rpm-ostree || {
-            echo "Failed to remove GNOME Software, attempting cleanup..."
+        if ! sudo rpm-ostree override remove --allow-inactive gnome-software gnome-software-rpm-ostree; then
+            echo "Failed to remove GNOME Software. Attempting cleanup..."
             sudo rpm-ostree cleanup -m
+            echo "Please reboot and try again if the problem persists."
             exit 1
-        }
-        
-        if rpm -q gnome-software gnome-software-rpm-ostree &> /dev/null; then
-            echo "WARNING: GNOME Software packages still present, removal may have failed"
+        fi
+        if rpm -q gnome-software &>/dev/null || rpm -q gnome-software-rpm-ostree &>/dev/null; then
+            echo "WARNING: GNOME Software packages still present. Removal may have failed."
+            exit 1
         else
-            echo "GNOME Software packages successfully removed"
+            echo "GNOME Software packages successfully removed."
         fi
     else
-        echo "GNOME Software packages not found, skipping removal"
+        echo "GNOME Software packages not found. Skipping removal."
     fi
 }
 
