@@ -35,7 +35,8 @@ done
 
 sleep 10
 
-sudo systemctl enable unbound sshd
+sudo systemctl enable unbound
+sudo systemctl enable sshd
 
 echo "Installation complete. A reboot is required."
 sleep 5
