@@ -13,6 +13,11 @@ check_rpm_ostree() {
     fi
 }
 
+check_package() {
+    local package="$1"
+    rpm -q "$package" &> /dev/null
+}
+
 check_rpm_ostree
 
 echo "Updating the system..."
@@ -24,19 +29,17 @@ sudo rpm-ostree update || {
 
 echo "Installing packages..."
 for package in unbound inotify-tools net-tools libpcap-devel libusb1-devel ruby; do
-    echo "Installing $package..."
-    sudo rpm-ostree install $package || {
-        echo "Failed to install $package, attempting cleanup..."
-        sudo rpm-ostree cleanup -m
-        exit 1
-    }
+    if check_package "$package"; then
+        echo "Package $package is already installed, skipping..."
+    else
+        echo "Installing $package..."
+        sudo rpm-ostree install $package || {
+            echo "Failed to install $package, attempting cleanup..."
+            sudo rpm-ostree cleanup -m
+            exit 1
+        }
+    fi
 done
-
-
-sleep 10
-
-sudo systemctl enable unbound
-sudo systemctl enable sshd
 
 echo "Installation complete. A reboot is required."
 sleep 5

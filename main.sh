@@ -28,3 +28,10 @@ sudo bash network.sh
 
 echo "Step 9: Setting up IP blocking"
 sudo bash IP_tables_install.sh
+
+echo "Setting up post install"
+sudo bash initiate_postinstall.sh
+
+sleep 20
+
+sudo systemctl reboot 
