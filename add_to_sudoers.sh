@@ -1,10 +1,10 @@
 #!/bin/bash
 
-USER=$(whoami)
-
-if ! sudo grep -q "$USER ALL=(ALL) NOPASSWD:ALL" /etc/sudoers; then
-    echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers > /dev/null
-    echo "User $USER added to sudoers with NOPASSWD."
-else
+USER=${SUDO_USER:-$(whoami)}
+LINE="$USER ALL=(ALL) NOPASSWD:ALL"
+if sudo grep -qF "$LINE" /etc/sudoers; then
     echo "User $USER is already in the sudoers file with NOPASSWD."
+else
+    echo "$LINE" | sudo EDITOR="tee -a" visudo
+    echo "User $USER added to sudoers with NOPASSWD."
 fi
