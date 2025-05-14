@@ -28,7 +28,3 @@ sudo bash network.sh
 
 echo "Step 9: Setting up IP blocking"
 sudo bash IP_tables_install.sh
-
-echo "All steps completed. System will reboot in 10 seconds..."
-sleep 10
-sudo systemctl reboot
