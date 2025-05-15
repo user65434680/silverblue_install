@@ -8,6 +8,15 @@ sudo bash install.sh
 sudo systemctl enable unbound
 sudo systemctl enable sshd
 
-sleep 10
-
-sudo systemctl reboot
+echo "System will reboot in 10 seconds..."
+SCRIPT_PATH="$0"
+cleanup_and_reboot() {
+    echo "Cleaning up..."
+    rm -f "$SCRIPT_PATH"
+    systemctl reboot
+}
+systemd-run --on-active=10 /bin/bash -c "rm -f $SCRIPT_PATH && systemctl reboot" || {
+    echo "Fallback: Using sleep method"
+    sleep 10
+    cleanup_and_reboot
+}
