@@ -32,13 +32,14 @@ systemctl start sshd.service &>/dev/null || {
 }
 
 echo "Verifying services..."
-echo "Checking if services are enabled:"
-systemctl is-enabled unbound.service
-systemctl is-enabled sshd.service
+echo "Checking services status:"
+echo -n "unbound service: "
+systemctl is-enabled unbound.service &>/dev/null && echo -n "enabled, " || echo -n "disabled, "
+systemctl is-active unbound.service &>/dev/null && echo "running" || echo "not running"
 
-echo "Checking if services are running:"
-systemctl status unbound.service
-systemctl status sshd.service
+echo -n "sshd service: "
+systemctl is-enabled sshd.service &>/dev/null && echo -n "enabled, " || echo -n "disabled, "
+systemctl is-active sshd.service &>/dev/null && echo "running" || echo "not running"
 
 
 echo "System will reboot in 10 seconds..."
