@@ -4,7 +4,45 @@ set -e
 
 echo "Running post-installation checks..."
 
-# Run remove and install scripts
+echo "Enabling and starting required services..."
+
+systemctl enable unbound.service || {
+    echo "Failed to enable unbound service, retrying..."
+    sleep 2
+    systemctl enable unbound.service
+}
+
+
+systemctl start unbound.service || {
+    echo "Failed to start unbound service, retrying..."
+    sleep 2
+    systemctl start unbound.service
+}
+
+systemctl enable sshd.service || {
+    echo "Failed to enable sshd service, retrying..."
+    sleep 2
+    systemctl enable sshd.service
+}
+
+systemctl start sshd.service || {
+    echo "Failed to start sshd service, retrying..."
+    sleep 2
+    systemctl start sshd.service
+}
+
+echo "Verifying services..."
+echo "Checking if services are enabled:"
+systemctl is-enabled unbound.service
+systemctl is-enabled sshd.service
+
+echo "Checking if services are running:"
+systemctl status unbound.service
+systemctl status sshd.service
+
+
+
+
 sudo bash remove_applications.sh
 sudo bash install.sh
 
