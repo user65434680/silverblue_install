@@ -2,6 +2,8 @@
 
 set -e
 
+sleep 10
+
 echo "Running post-installation checks..."
 
 echo "Enabling and starting required services..."

@@ -13,7 +13,9 @@ echo "Creating systemd service..."
 cat << EOF | sudo tee "$SERVICE_PATH"
 [Unit]
 Description=One-time post-installation setup
-After=network.target
+After=network-online.target sshd.service unbound.service
+Wants=network-online.target sshd.service unbound.service
+RequiresMountsFor=/usr/local/bin /etc/systemd/system
 
 [Service]
 Type=oneshot
