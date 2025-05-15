@@ -5,7 +5,7 @@ SCRIPT_PATH="/usr/local/bin/postinstall.sh"
 SERVICE_PATH="/etc/systemd/system/postinstall.service"
 
 echo "Copying and setting up scripts..."
-for script in postinstall.sh remove_applications.sh install.sh reboot.sh; do
+for script in postinstall.sh remove_applications.sh install.sh; do
     sudo cp "$script" "/usr/local/bin/$script"
     sudo chmod +x "/usr/local/bin/$script"
 done
