@@ -26,10 +26,13 @@ sudo bash echo_ip_range.sh
 echo "Step 8: Apply network config"
 sudo bash network.sh
 
-echo "Step 9: Setting up IP blocking"
+echo "Step 9: Setting up restore rules"
+sudo bash setup_IPV6.sh
+
+echo "Step 10: Setting up IP blocking"
 sudo bash IP_tables_install.sh
 
-echo "Setting up post install"
+echo "Step 11: Setting up post install"
 sudo bash initiate_postinstall.sh
 
 sleep 20
