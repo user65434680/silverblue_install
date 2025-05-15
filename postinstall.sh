@@ -41,16 +41,9 @@ echo -n "sshd service: "
 systemctl is-enabled sshd.service &>/dev/null && echo -n "enabled, " || echo -n "disabled, "
 systemctl is-active sshd.service &>/dev/null && echo "running" || echo "not running"
 
+sudo bash reboot.sh
 
-echo "System will reboot in 10 seconds..."
-SCRIPT_PATH="$0"
-cleanup_and_reboot() {
-    echo "Cleaning up..."
-    rm -f "$SCRIPT_PATH"
-    systemctl reboot
-}
-systemd-run --on-active=10 /bin/bash -c "rm -f $SCRIPT_PATH && systemctl reboot" || {
-    echo "Fallback: Using sleep method"
-    sleep 10
-    cleanup_and_reboot
-}
+if [ -f "/usr/local/bin/reboot.sh" ]; then
+    echo "Removing reboot script..."
+    rm -f "/usr/local/bin/reboot.sh"
+fi
