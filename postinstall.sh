@@ -41,9 +41,14 @@ echo -n "sshd service: "
 systemctl is-enabled sshd.service &>/dev/null && echo -n "enabled, " || echo -n "disabled, "
 systemctl is-active sshd.service &>/dev/null && echo "running" || echo "not running"
 
-sudo bash reboot.sh
+echo "Cleaning up post-install files..."
+systemctl disable postinstall.service &>/dev/null
+rm -f "/etc/systemd/system/postinstall.service"
+rm -f "/usr/local/bin/postinstall.sh"
+rm -f "/usr/local/bin/reboot.sh"
+rm -f "/usr/local/bin/remove_applications.sh"
+rm -f "/usr/local/bin/install.sh"
+systemctl daemon-reload
 
-if [ -f "/usr/local/bin/reboot.sh" ]; then
-    echo "Removing reboot script..."
-    rm -f "/usr/local/bin/reboot.sh"
-fi
+echo "Scheduling system reboot..."
+systemd-run --on-active=10 systemctl reboot
