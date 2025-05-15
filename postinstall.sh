@@ -6,29 +6,29 @@ echo "Running post-installation checks..."
 
 echo "Enabling and starting required services..."
 
-systemctl enable unbound.service || {
+
+systemctl enable unbound.service &>/dev/null || {
     echo "Failed to enable unbound service, retrying..."
     sleep 2
-    systemctl enable unbound.service
+    systemctl enable unbound.service &>/dev/null
 }
 
-
-systemctl start unbound.service || {
+systemctl start unbound.service &>/dev/null || {
     echo "Failed to start unbound service, retrying..."
     sleep 2
-    systemctl start unbound.service
+    systemctl start unbound.service &>/dev/null
 }
 
-systemctl enable sshd.service || {
+systemctl enable sshd.service &>/dev/null || {
     echo "Failed to enable sshd service, retrying..."
     sleep 2
-    systemctl enable sshd.service
+    systemctl enable sshd.service &>/dev/null
 }
 
-systemctl start sshd.service || {
+systemctl start sshd.service &>/dev/null || {
     echo "Failed to start sshd service, retrying..."
     sleep 2
-    systemctl start sshd.service
+    systemctl start sshd.service &>/dev/null
 }
 
 echo "Verifying services..."
@@ -39,31 +39,6 @@ systemctl is-enabled sshd.service
 echo "Checking if services are running:"
 systemctl status unbound.service
 systemctl status sshd.service
-
-
-
-
-sudo bash remove_applications.sh
-sudo bash install.sh
-
-sleep 5
-
-echo "Enabling required services..."
-systemctl enable unbound.service || {
-    echo "Failed to enable unbound service, retrying..."
-    sleep 2
-    systemctl enable unbound.service
-}
-
-systemctl enable sshd.service || {
-    echo "Failed to enable sshd service, retrying..."
-    sleep 2
-    systemctl enable sshd.service
-}
-
-echo "Verifying services..."
-systemctl is-enabled unbound.service
-systemctl is-enabled sshd.service
 
 
 echo "System will reboot in 10 seconds..."
