@@ -9,6 +9,12 @@ echo "Copying blocking script..."
 sudo cp resolve_and_block.sh /opt/IP_blocker/resolve_and_block.sh
 sudo chmod +x /opt/IP_blocker/resolve_and_block.sh
 
+echo "Setting up allowed_domains.txt file..."
+if [ ! -f "allowed_domains.txt" ]; then
+    echo "Creating empty allowed_domains.txt file..."
+    touch allowed_domains.txt
+fi
+
 echo "Copying allowed_domains.txt file..."
 sudo cp allowed_domains.txt /opt/IP_blocker/allowed_domains.txt
 
