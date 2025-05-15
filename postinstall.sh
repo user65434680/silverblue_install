@@ -1,12 +1,32 @@
 #!/bin/bash
-# post install rerun
-# some commands may not work on the first run so this reruns them and checks for potential missed applications or errors.
-sudo bash remove_applications.sh
 
+set -e
+
+echo "Running post-installation checks..."
+
+# Run remove and install scripts
+sudo bash remove_applications.sh
 sudo bash install.sh
 
-sudo systemctl enable unbound
-sudo systemctl enable sshd
+sleep 5
+
+echo "Enabling required services..."
+systemctl enable unbound.service || {
+    echo "Failed to enable unbound service, retrying..."
+    sleep 2
+    systemctl enable unbound.service
+}
+
+systemctl enable sshd.service || {
+    echo "Failed to enable sshd service, retrying..."
+    sleep 2
+    systemctl enable sshd.service
+}
+
+echo "Verifying services..."
+systemctl is-enabled unbound.service
+systemctl is-enabled sshd.service
+
 
 echo "System will reboot in 10 seconds..."
 SCRIPT_PATH="$0"
