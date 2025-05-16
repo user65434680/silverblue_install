@@ -48,3 +48,11 @@ sudo chmod 700 /opt/IP_blocker/resolve_and_block.sh
 sudo chmod 600 /opt/IP_blocker/allowed_domains.txt
 sudo chown root:root /opt/IP_blocker/resolve_and_block.sh
 sudo chown root:root /opt/IP_blocker/allowed_domains.txt
+sudo chcon -t bin_t /opt/IP_blocker/resolve_and_block.sh
+sudo semanage fcontext -a -t bin_t /opt/IP_blocker/resolve_and_block.sh
+sudo restorecon -v /opt/IP_blocker/resolve_and_block.sh
+
+sudo chcon -t bin_t /opt/IP_blocker/allowed_domains.txt
+sudo semanage fcontext -a -t bin_t /opt/IP_blocker/allowed_domains.txt
+sudo restorecon -v /opt/IP_blocker/allowed_domains.txt
+

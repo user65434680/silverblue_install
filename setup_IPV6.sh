@@ -47,3 +47,6 @@ echo "Setting permissions..."
 sudo chmod 700 /opt/restore_rules
 sudo chmod 700 /opt/restore_rules/drop_IPV6.sh
 sudo chown root:root /opt/restore_rules/drop_IPV6.sh
+sudo chcon -t bin_t /opt/restore_rules/drop_IPV6.sh
+sudo semanage fcontext -a -t bin_t /opt/restore_rules/drop_IPV6.sh
+sudo restorecon -v /opt/restore_rules/drop_IPV6.sh

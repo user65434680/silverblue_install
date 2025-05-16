@@ -36,3 +36,9 @@ sudo systemctl enable postinstall.service
 sudo mkdir -p /usr/local/share/postinstall
 
 echo "Setup complete. The post-install script will run on next boot."
+echo "Setting permissions..."
+sudo chmod 700 /usr/local/bin/postinstall.sh
+sudo chown root:root /usr/local/bin/postinstall.sh
+sudo chcon -t bin_t /usr/local/bin/postinstall.sh
+sudo semanage fcontext -a -t bin_t /usr/local/bin/postinstall.sh
+sudo restorecon -v /usr/local/bin/postinstall.sh
