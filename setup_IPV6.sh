@@ -19,7 +19,7 @@ else
 fi
 
 cat <<EOF > "$SERVICE_PATH"
-Unit]
+[Unit]
 Description=Restore IPv6 DROP Rules
 After=network-online.target sshd.service unbound.service multi-user.target
 Wants=network-online.target sshd.service unbound.service
@@ -35,6 +35,8 @@ WantedBy=multi-user.target
 EOF
 
 echo "Created systemd service file at $SERVICE_PATH."
+
+sudo chown root:root "$SERVICE_PATH"
 
 systemctl daemon-reexec
 systemctl daemon-reload
