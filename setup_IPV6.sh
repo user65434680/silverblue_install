@@ -8,7 +8,7 @@ if [[ "$EUID" -ne 0 ]]; then
   exit 1
 fi
 mkdir -p /opt/restore_rules
-sudo cp drop_IPV6 "$SCRIPT_PATH"
+sudo cp drop_IPV6.sh "$SCRIPT_PATH"
 
 if [[ -f "$SCRIPT_PATH" ]]; then
   chmod +x "$SCRIPT_PATH"
@@ -19,14 +19,16 @@ else
 fi
 
 cat <<EOF > "$SERVICE_PATH"
-[Unit]
+Unit]
 Description=Restore IPv6 DROP Rules
-After=network.target
+After=network-online.target sshd.service unbound.service multi-user.target
+Wants=network-online.target sshd.service unbound.service
+RequiresMountsFor=/opt/restore_rules /etc/systemd/system
 
 [Service]
 Type=oneshot
-ExecStart=$SCRIPT_PATH
-RemainAfterExit=true
+ExecStart=/opt/restore_rules/drop_IPV6.sh
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target

@@ -34,12 +34,6 @@ User=root
 WantedBy=multi-user.target
 EOF
 
-sudo ip6tables -P INPUT DROP
-sudo ip6tables -P FORWARD DROP
-sudo ip6tables -P OUTPUT DROP
-
-sudo ip6tables-save > /etc/iptables/rules.v6
-
 echo "Reloading systemd..."
 sudo systemctl daemon-reload
 

@@ -35,6 +35,9 @@ sudo bash IP_tables_install.sh
 echo "Step 11: Setting up post install"
 sudo bash initiate_postinstall.sh
 
+echo "Step 12: Removing unnecessary applications again..."
+sudo bash remove_applications.sh
+
 sleep 20
 
 sudo systemctl reboot 
