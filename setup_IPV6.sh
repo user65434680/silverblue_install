@@ -36,10 +36,14 @@ EOF
 
 echo "Created systemd service file at $SERVICE_PATH."
 
-sudo chown root:root "$SERVICE_PATH"
 
 systemctl daemon-reexec
 systemctl daemon-reload
 systemctl enable drop-ipv6.service
 
 echo "Service enabled to run on boot: drop-ipv6.service"
+
+echo "Setting permissions..."
+sudo chmod 700 /opt/restore_rules
+sudo chmod 700 /opt/restore_rules/drop_IPV6.sh
+sudo chown root:root /opt/restore_rules/drop_IPV6.sh
