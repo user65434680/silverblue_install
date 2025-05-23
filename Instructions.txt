@@ -1,0 +1,4 @@
+To install the project on Fedora Silverblue 42 run
+
+git clone https://github.com/user65434680/silverblue_install silverblue_install && cd silverblue_install && sudo ./main.sh. 
+
